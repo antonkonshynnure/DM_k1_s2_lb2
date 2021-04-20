@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+const int GRAPHSIZE=12;
+class Graph{
+    private:
+        size_t weights[GRAPHSIZE][GRAPHSIZE];
+        size_t next_vert(size_t* dist_arr,bool *checked) {
+            size_t n=0;
+            size_t min_val=-1;
+            for(size_t i=0;i<GRAPHSIZE;i++){
+                if (dist_arr[i]<min_val&&checked[i]!=true){
+                    min_val=dist_arr[i];
+                    n=i+ 1;
+                }
+            }
+            return n;
+        }
+    public:
+        size_t* dijkstra(){
+            bool checked[GRAPHSIZE];
+            size_t* dist_arr=new size_t[GRAPHSIZE];
+            dist_arr[0]=0;
+            for(size_t v=1;v<GRAPHSIZE;v++)dist_arr[v]=-1;
+            for(size_t vert=1;vert!=0;vert=next_vert(dist_arr,checked)){
+                for(size_t col=0;col<GRAPHSIZE;col++){
+                    size_t w=weights[vert- 1][col];
+                    if(w!=0){
+                        size_t dist=w+dist_arr[vert- 1];
+                        if(dist<dist_arr[col])dist_arr[col]=dist;
+                    }
+                }
+                checked[vert- 1]=true;
+            }
+            return dist_arr;
+        }
+        void input() {
+            for (size_t j=0;j<GRAPHSIZE;j++){
+                for (size_t i=0;i<GRAPHSIZE;i++){
+                    cin>>weights[j][i];
+                }
+            }
+        }
+};
+int main(){
+    Graph g;
+    g.input();
+    size_t* a=g.dijkstra();
+    for (size_t k=0;k<GRAPHSIZE;k++)cout<<a[k]<<endl;
+}
+/*
+0 6 0 5 9 0 0 0 0 0 0 0
+0 0 1 2 4 9 0 0 0 0 0 0
+0 0 0 0 2 3 0 0 0 0 0 0
+0 0 0 0 2 0 4 7 0 0 0 0
+0 0 0 0 0 2 2 4 8 0 0 0
+0 0 0 0 0 0 0 2 4 0 0 0
+0 0 0 0 0 0 0 2 0 4 8 0
+0 0 0 0 0 0 0 0 0 2 4 9
+0 0 0 0 0 0 0 0 0 0 1 4
+0 0 0 0 0 0 0 0 0 0 4 0
+0 0 0 0 0 0 0 0 0 0 0 2
+0 0 0 0 0 0 0 0 0 0 0 0
+
+*/
